@@ -8,8 +8,11 @@
   community.mysql.mysql_db:
     name: "{{ etherpad_mysql_database_name }}"
     collation: "{{ etherpad_mysql_database_collation }}"
+    login_host: "{{ etherpad_mysql_database_host }}"
+    login_port: "{{ etherpad_mysql_database_port }}"
+    login_user: "{{ etherpad_mysql_database_user }}"
+    login_password: "{{ etherpad_mysql_database_password }}"
     state: present
-    login_unix_socket: /run/mysqld/mysqld.sock
   register: database
 
 - name: Copy mysqldb schema # noqa no-handler
@@ -23,9 +26,12 @@
   community.mysql.mysql_db:
     name: "{{ etherpad_mysql_database_name }}"
     collation: "{{ etherpad_mysql_database_collation }}"
+    login_host: "{{ etherpad_mysql_database_host }}"
+    login_port: "{{ etherpad_mysql_database_port }}"
+    login_user: "{{ etherpad_mysql_database_user }}"
+    login_password: "{{ etherpad_mysql_database_password }}"
     state: import
     target: /tmp/etherpad_schema.sql
-    login_unix_socket: /run/mysqld/mysqld.sock
   when: database is changed
 
 - name: Remove mysqldb schema file # noqa no-handler
@@ -38,14 +44,6 @@
   ansible.builtin.fail:
     msg: "You need to set a password for mysql user!"
   when: etherpad_mysql_database_password is undefined or etherpad_mysql_database_password | length == 0
-
-- name: Create mysql user
-  community.mysql.mysql_user:
-    name: "{{ etherpad_mysql_database_user }}"
-    state: present
-    password: "{{ etherpad_mysql_database_password }}"
-    priv: "{{ etherpad_mysql_database_name }}.*:ALL"
-    login_unix_socket: /run/mysqld/mysqld.sock
 
 - name: Register systemd version number
   ansible.builtin.shell: |
