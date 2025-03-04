@@ -9,8 +9,7 @@
 {% if etherpad_ssl_enabled %}
   "ssl" : {
             "key"  : "{{ etherpad_ssl_key }}",
-            "cert" : "{{ etherpad_ssl_cert }}",
-            "ca": ["{{ etherpad_ssl_ca_intermediate_cert1 }}", "{{ etherpad_ssl_ca_intermediate_cert2 }}"]
+            "cert" : "{{ etherpad_ssl_cert }}"
           },
 {% endif %}
   "skinName": "{{ etherpad_skin_name }}",
